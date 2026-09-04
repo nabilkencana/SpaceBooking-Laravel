@@ -342,7 +342,7 @@ flowchart TD
     B1 --> C1{"Cek Kepemilikan Space Admin"}
     C1 -->|Bukan Milik Admin| D1["Return HTTP 404 Not Found"]
     C1 -->|Valid Milik Admin| E1{"Status Saat Ini == 'disetujui'?"}
-    E1 -->|Tidak (cth: belum_dikonfirm / aktif)| F1["Return HTTP 400 Bad Request<br/>(Transisi Ditolak)"]
+    E1 -->|Tidak / Transisi Ditolak| F1["Return HTTP 400 Bad Request<br/>(Transisi Ditolak)"]
     E1 -->|Ya| G1["Update Status = 'aktif' & check_in_at = NOW()"]
     G1 --> H1["Return HTTP 200 OK (Check-In Berhasil)"]
     D1 --> Z1(["Selesai"])
