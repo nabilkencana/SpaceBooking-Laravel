@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UploadController extends Controller
@@ -39,14 +40,15 @@ class UploadController extends Controller
         $extension = $file->getClientOriginalExtension();
         $filename = time() . '-' . Str::random(10) . '.' . $extension;
 
-        $file->storeAs('public/' . $folder, $filename);
+        $disk = config('filesystems.default', 'public');
+        $file->storeAs($folder, $filename, $disk);
 
         return $this->created([
             'filename' => $filename,
             'original_name' => $file->getClientOriginalName(),
             'mimetype' => $file->getMimeType(),
             'size' => $file->getSize(),
-            'url' => asset('storage/' . $folder . '/' . $filename),
+            'url' => Storage::disk($disk)->url($folder . '/' . $filename),
         ], $message);
     }
 }

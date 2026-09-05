@@ -11,6 +11,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
@@ -23,14 +24,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Schema::disableForeignKeyConstraints();
-        Reservasi::truncate();
-        Diskon::truncate();
-        Space::truncate();
-        Member::truncate();
-        SpaceOwner::truncate();
-        User::truncate();
-        Schema::enableForeignKeyConstraints();
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('TRUNCATE users, space_owners, spaces, members, diskons, reservasis CASCADE;');
+        } else {
+            Schema::disableForeignKeyConstraints();
+            Reservasi::truncate();
+            Diskon::truncate();
+            Space::truncate();
+            Member::truncate();
+            SpaceOwner::truncate();
+            User::truncate();
+            Schema::enableForeignKeyConstraints();
+        }
 
         // ==================== ADMIN + SPACE OWNER ====================
         $adminUser = User::create([

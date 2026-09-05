@@ -24,6 +24,6 @@ class Space extends Model
 
     public function getFotoUrlAttribute()
     {
-        return $this->foto ? Storage::url('spaces/' . $this->foto) : null;
+        return $this->foto ? Storage::disk(config('filesystems.default', 'public'))->url('spaces/' . $this->foto) : null;
     }
 }
