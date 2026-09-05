@@ -14,6 +14,7 @@ use App\Traits\ApiResponse;
 use App\Traits\OwnedResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class SpaceAdminController extends Controller
 {
@@ -40,7 +41,16 @@ class SpaceAdminController extends Controller
             return $this->error('Data profil coworking space tidak ditemukan.', 'Not Found', 404);
         }
 
-        $space = $owner->spaces()->create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = time() . '-' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/spaces', $filename);
+            $data['foto'] = $filename;
+        }
+
+        $space = $owner->spaces()->create($data);
 
         return $this->created(new SpaceDetailResource($space->load('owner')), 'Space baru berhasil ditambahkan!');
     }
@@ -64,7 +74,16 @@ class SpaceAdminController extends Controller
             return $this->error('Space tidak ditemukan atau bukan milik Anda.', 'Not Found', 404);
         }
 
-        $space->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = time() . '-' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/spaces', $filename);
+            $data['foto'] = $filename;
+        }
+
+        $space->update($data);
 
         return $this->success(new SpaceDetailResource($space->fresh('owner')), 'Data space berhasil diperbarui!');
     }

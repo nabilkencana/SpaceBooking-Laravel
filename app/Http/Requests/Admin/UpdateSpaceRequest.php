@@ -19,7 +19,7 @@ class UpdateSpaceRequest extends FormRequest
             'tipe' => ['sometimes', 'string', 'in:desk,meeting_room,private_office'],
             'kapasitas' => ['sometimes', 'integer', 'min:1'],
             'deskripsi' => ['sometimes', 'string'],
-            'foto' => ['nullable', 'string', 'max:255'],
+            'foto' => ['nullable'],
         ];
     }
 

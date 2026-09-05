@@ -29,11 +29,13 @@ class UploadController extends Controller
 
     private function handleUpload(Request $request, string $folder, string $message): JsonResponse
     {
-        $validated = $request->validate([
-            'file' => ['required', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        $field = $request->hasFile('file') ? 'file' : ($request->hasFile('image') ? 'image' : 'foto');
+
+        $request->validate([
+            $field => ['required', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
-        $file = $validated['file'];
+        $file = $request->file($field);
         $extension = $file->getClientOriginalExtension();
         $filename = time() . '-' . Str::random(10) . '.' . $extension;
 

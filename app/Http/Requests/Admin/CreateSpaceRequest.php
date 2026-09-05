@@ -19,7 +19,7 @@ class CreateSpaceRequest extends FormRequest
             'tipe' => ['required', 'string', 'in:desk,meeting_room,private_office'],
             'kapasitas' => ['required', 'integer', 'min:1'],
             'deskripsi' => ['required', 'string'],
-            'foto' => ['nullable', 'string', 'max:255'],
+            'foto' => ['nullable'],
         ];
     }
 
