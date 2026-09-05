@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,6 +23,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+        Reservasi::truncate();
+        Diskon::truncate();
+        Space::truncate();
+        Member::truncate();
+        SpaceOwner::truncate();
+        User::truncate();
+        Schema::enableForeignKeyConstraints();
+
         // ==================== ADMIN + SPACE OWNER ====================
         $adminUser = User::create([
             'username' => 'admin_demo',
@@ -152,14 +162,14 @@ class DatabaseSeeder extends Seeder
             'nama_diskon' => 'PROMOLEBARAN',
             'persentase_diskon' => 30,
             'tanggal_awal' => Carbon::create(2026, 3, 1, 0, 0, 0),
-            'tanggal_akhir' => Carbon::create(2026, 3, 31, 23, 59, 59),
+            'tanggal_akhir' => Carbon::create(2026, 12, 31, 23, 59, 59),
         ]);
 
         Diskon::create([
             'nama_diskon' => 'PROMOTAHUNBARU',
             'persentase_diskon' => 50,
             'tanggal_awal' => Carbon::create(2026, 12, 25, 0, 0, 0),
-            'tanggal_akhir' => Carbon::create(2027, 1, 5, 23, 59, 59),
+            'tanggal_akhir' => Carbon::create(2027, 12, 5, 23, 59, 59),
         ]);
 
         // ==================== RESERVASI (7 dengan variasi status & bulan) ====================
