@@ -24,6 +24,6 @@ class Member extends Model
 
     public function getFotoUrlAttribute()
     {
-        return $this->foto ? Storage::disk(config('filesystems.default', 'public'))->url('members/' . $this->foto) : null;
+        return $this->foto ? Storage::url('members/' . $this->foto) : null;
     }
 }

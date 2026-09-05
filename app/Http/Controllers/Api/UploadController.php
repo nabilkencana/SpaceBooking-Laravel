@@ -40,15 +40,14 @@ class UploadController extends Controller
         $extension = $file->getClientOriginalExtension();
         $filename = time() . '-' . Str::random(10) . '.' . $extension;
 
-        $disk = config('filesystems.default', 'public');
-        $file->storeAs($folder, $filename, $disk);
+        $file->storeAs($folder, $filename);
 
         return $this->created([
             'filename' => $filename,
             'original_name' => $file->getClientOriginalName(),
             'mimetype' => $file->getMimeType(),
             'size' => $file->getSize(),
-            'url' => Storage::disk($disk)->url($folder . '/' . $filename),
+            'url' => Storage::url($folder . '/' . $filename),
         ], $message);
     }
 }

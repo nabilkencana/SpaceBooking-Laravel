@@ -46,7 +46,7 @@ class SpaceAdminController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = time() . '-' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('spaces', $filename, config('filesystems.default', 'public'));
+            $file->storeAs('spaces', $filename);
             $data['foto'] = $filename;
         }
 
@@ -79,7 +79,7 @@ class SpaceAdminController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = time() . '-' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('spaces', $filename, config('filesystems.default', 'public'));
+            $file->storeAs('spaces', $filename);
             $data['foto'] = $filename;
         }
 
