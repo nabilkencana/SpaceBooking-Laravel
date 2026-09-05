@@ -1,6 +1,6 @@
 # E2E Smoke Test Report — Smart Space Booking
 
-**Tanggal Uji:** 2026-09-04 17:12:23 UTC  
+**Tanggal Uji:** 2026-09-05 05:20:02 UTC  
 **Environment:** Local Testing Server (`http://127.0.0.1:8000/api`)  
 **Hasil:** **50/50 PASS** (Failed: 0)
 
@@ -28,7 +28,7 @@ Semua endpoint yang terdaftar di `routes/api.php` telah diuji secara otomatis me
 | #8 | GET | `/auth/profile` | 200 | 200 | PASS | Member Profile Detail |
 | #9 | POST | `/auth/logout` | 200 | 200 | PASS | Logout Session |
 | #10 | GET | `/spaces/types` | 200 | 200 | PASS | Daftar Tipe Space |
-| #11 | GET | `/spaces/availability?id_space=1&tanggal=2026-09-11&jam_mulai=15:00&durasi_jam=2` | 200 | 200 | PASS | Cek Ketersediaan Space |
+| #11 | GET | `/spaces/availability?id_space=1&tanggal=2026-09-12&jam_mulai=15:00&durasi_jam=2` | 200 | 200 | PASS | Cek Ketersediaan Space |
 | #12 | GET | `/spaces` | 200 | 200 | PASS | Katalog Semua Space |
 | #13 | GET | `/spaces/1` | 200 | 200 | PASS | Detail Space ID 1 |
 | #14 | GET | `/diskon/active` | 200 | 200 | PASS | Daftar Promo Diskon Aktif |

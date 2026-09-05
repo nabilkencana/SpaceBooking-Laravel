@@ -26,20 +26,16 @@ class ReservasiResource extends JsonResource
             'status' => $this->status,
             'check_in_at' => $this->check_in_at?->toIso8601String(),
             'check_out_at' => $this->check_out_at?->toIso8601String(),
-            'space' => $this->whenLoaded('space', function () {
-                return [
-                    'id' => $this->space->id,
-                    'nama_space' => $this->space->nama_space,
-                    'tipe' => $this->space->tipe,
-                ];
-            }),
-            'member' => $this->whenLoaded('member', function () {
-                return [
-                    'id' => $this->member->id,
-                    'nama_member' => $this->member->nama_member,
-                    'telp' => $this->member->telp,
-                ];
-            }),
+            'space' => $this->whenLoaded('space', fn () => [
+                'id' => $this->space->id,
+                'nama_space' => $this->space->nama_space,
+                'tipe' => $this->space->tipe,
+            ]),
+            'member' => $this->whenLoaded('member', fn () => [
+                'id' => $this->member->id,
+                'nama_member' => $this->member->nama_member,
+                'telp' => $this->member->telp,
+            ]),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];

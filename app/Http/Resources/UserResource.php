@@ -9,27 +9,16 @@ class UserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $data = [
+        return [
             'id' => $this->id,
             'username' => $this->username,
             'role' => $this->role,
-        ];
-
-        if ($this->role === 'member') {
-            $data['member'] = $this->relationLoaded('member') && $this->member
+            'member' => $this->role === 'member' && $this->relationLoaded('member') && $this->member
                 ? new MemberResource($this->member)
-                : null;
-            $data['space_owner'] = null;
-        } elseif ($this->role === 'admin_space') {
-            $data['member'] = null;
-            $data['space_owner'] = $this->relationLoaded('spaceOwner') && $this->spaceOwner
+                : null,
+            'space_owner' => $this->role === 'admin_space' && $this->relationLoaded('spaceOwner') && $this->spaceOwner
                 ? new SpaceOwnerResource($this->spaceOwner)
-                : null;
-        } else {
-            $data['member'] = null;
-            $data['space_owner'] = null;
-        }
-
-        return $data;
+                : null,
+        ];
     }
 }

@@ -26,70 +26,21 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
 
-        // 404 Not Found
-        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
-            if ($request->is('api/*') || $request->expectsJson()) {
-                return response()->json([
-                    'status' => false,
-                    'statusCode' => 404,
-                    'message' => 'Resource tidak ditemukan',
-                    'error' => 'Not Found',
-                    'timestamp' => now()->toIso8601String(),
-                ], 404);
-            }
-        });
+        $jsonErr = fn ($status, $msg, $err, $data = null) => response()->json(
+            array_filter([
+                'status' => false,
+                'statusCode' => $status,
+                'message' => $msg,
+                'error' => $err,
+                'data' => $data,
+                'timestamp' => now()->toIso8601String(),
+            ], fn ($v) => $v !== null),
+            $status
+        );
 
-        // 403 Forbidden
-        $exceptions->render(function (AccessDeniedHttpException $e, Request $request) {
-            if ($request->is('api/*') || $request->expectsJson()) {
-                return response()->json([
-                    'status' => false,
-                    'statusCode' => 403,
-                    'message' => 'Akses ditolak',
-                    'error' => 'Forbidden',
-                    'timestamp' => now()->toIso8601String(),
-                ], 403);
-            }
-        });
-
-        // 401 Unauthenticated
-        $exceptions->render(function (AuthenticationException $e, Request $request) {
-            if ($request->is('api/*') || $request->expectsJson()) {
-                return response()->json([
-                    'status' => false,
-                    'statusCode' => 401,
-                    'message' => 'Unauthenticated atau token tidak valid',
-                    'error' => 'Unauthorized',
-                    'timestamp' => now()->toIso8601String(),
-                ], 401);
-            }
-        });
-
-        // Validation Error (422) - override format default
-        $exceptions->render(function (ValidationException $e, Request $request) {
-            if ($request->is('api/*') || $request->expectsJson()) {
-                return response()->json([
-                    'status' => false,
-                    'statusCode' => 422,
-                    'message' => 'Validasi gagal',
-                    'error' => 'Validation Error',
-                    'data' => $e->errors(),
-                    'timestamp' => now()->toIso8601String(),
-                ], 422);
-            }
-        });
-
-        // 500 Internal Server Error
-        $exceptions->render(function (\Throwable $e, Request $request) {
-            if ($request->is('api/*') || $request->expectsJson()) {
-                $message = config('app.debug') ? $e->getMessage() : 'Terjadi kesalahan server';
-                return response()->json([
-                    'status' => false,
-                    'statusCode' => 500,
-                    'message' => $message,
-                    'error' => 'Internal Server Error',
-                    'timestamp' => now()->toIso8601String(),
-                ], 500);
-            }
-        });
+        $exceptions->render(fn (NotFoundHttpException $e) => $jsonErr(404, 'Resource tidak ditemukan', 'Not Found'));
+        $exceptions->render(fn (AccessDeniedHttpException $e) => $jsonErr(403, 'Akses ditolak', 'Forbidden'));
+        $exceptions->render(fn (AuthenticationException $e) => $jsonErr(401, 'Unauthenticated atau token tidak valid', 'Unauthorized'));
+        $exceptions->render(fn (ValidationException $e) => $jsonErr(422, 'Validasi gagal', 'Validation Error', $e->errors()));
+        $exceptions->render(fn (\Throwable $e) => $jsonErr(500, config('app.debug') ? $e->getMessage() : 'Terjadi kesalahan server', 'Internal Server Error'));
     })->create();
